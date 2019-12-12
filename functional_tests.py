@@ -36,3 +36,4 @@ def test_can_start_a_list_and_retrieve_it_later(new_browser):
     # She visits that URL - her to-do list is still there.
 
     # Satisfied, she goes back to sleep
+    pytest.fail('Finish this test')
