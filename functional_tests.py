@@ -36,8 +36,7 @@ def test_can_start_a_list_and_retrieve_it_later(new_browser):
 
     table = browser.find_element_by_id('id_list_table')
     rows = table.find_elements_by_tag_name('tr')
-    assert any(row.text == '1: Buy peacock feathers' for row in rows), \
-            'New to-do item did not appear'
+    assert '1: Buy peacock feathers' in [row.text for row in rows]
 
     # There is still a text box inviting her to add another item. She
     # enters "Use peacock feathers to make a fly" (Edith is very methodical)
