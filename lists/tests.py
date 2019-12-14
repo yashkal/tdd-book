@@ -24,6 +24,15 @@ class TestHomePage:
         client.get('/')
         assert Item.objects.count() == 0
 
+    def test_displays_all_list_items(self, client):
+        Item.objects.create(text='itemey 1')
+        Item.objects.create(text='itemey 2')
+
+        response = client.get('/')
+
+        assert 'itemey 1' in response.content.decode()
+        assert 'itemey 2' in response.content.decode()
+
 @pytest.mark.django_db
 class TestItemModel:
     def test_saving_and_retrieving_items(self):
