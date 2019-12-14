@@ -10,6 +10,11 @@ def new_browser():
     yield browser
     browser.quit()
 
+def check_for_row_in_list_table(browser, row_text):
+    table = browser.find_element_by_id('id_list_table')
+    rows = table.find_elements_by_tag_name('tr')
+    assert row_text in [row.text for row in rows]
+
 def test_can_start_a_list_and_retrieve_it_later(new_browser):
     # Edith has heard about a cool new online to-do app. She goes
     # to check out its homepage
@@ -34,12 +39,17 @@ def test_can_start_a_list_and_retrieve_it_later(new_browser):
     input_box.send_keys(Keys.ENTER)
     sleep(2)
 
-    table = browser.find_element_by_id('id_list_table')
-    rows = table.find_elements_by_tag_name('tr')
-    assert '1: Buy peacock feathers' in [row.text for row in rows]
+    check_for_row_in_list_table(browser, '1: Buy peacock feathers')
 
     # There is still a text box inviting her to add another item. She
     # enters "Use peacock feathers to make a fly" (Edith is very methodical)
+    input_box = browser.find_element_by_id('id_new_item')
+    input_box.send_keys('Use peacock feathers to make a fly')
+    input_box.send_keys(Keys.ENTER)
+    sleep(2)
+
+    check_for_row_in_list_table(browser, '1: Buy peacock feathers')
+    check_for_row_in_list_table(browser, '2: Use peacock feathers to make a fly')
 
     # The page updates again, and now shows both items on her list
 
