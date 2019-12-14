@@ -14,6 +14,9 @@ class TestHomePage:
         new_item = Item.objects.first()
         assert new_item.text == 'A new list item'
 
+    def test_redirects_after_POST(self, client):
+        response = client.post('/', data={'item_text': 'A new list item'})
+
         assert response.status_code == 302
         assert response['location'] == '/'
 
