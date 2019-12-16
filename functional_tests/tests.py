@@ -73,31 +73,31 @@ def test_multiple_users_can_start_lists_at_different_urls(new_browser, live_serv
 
     # She notices that her list has a unique URL
     edith_list_url = browser.current_url
-    assert re.match('/lists/.+', edith_list_url)
+    assert re.search(r'/lists/.+', edith_list_url)
 
     # Now a new user, Francis, comes along to the site
-    browser.quit()
-    browser = new_browser
+    #browser.quit()
+    francis_browser = new_browser
 
     # There is no sign of Edith's list
-    browser.get(live_server.url)
-    page_text = browser.find_element_by_tag_name('body').text
+    francis_browser.get(live_server.url)
+    page_text = francis_browser.find_element_by_tag_name('body').text
     assert 'Buy peacock feathers' not in page_text
     assert 'make a fly' not in page_text
 
     # Francis starts a new list
-    inputbox = browser.find_element_by_id('id_new_item')
+    inputbox = francis_browser.find_element_by_id('id_new_item')
     inputbox.send_keys('Buy milk')
     inputbox.send_keys(Keys.ENTER)
-    wait_for_row_in_list_table(browser, '1: Buy milk')
+    wait_for_row_in_list_table(francis_browser, '1: Buy milk')
 
     # Francis gets his own url
-    francis_list_url = browser.current_url
-    assert re.match('/lists/.+', edith_list_url)
+    francis_list_url = francis_browser.current_url
+    assert re.search(r'/lists/.+', edith_list_url)
     assert edith_list_url != francis_list_url
 
     # There is still no sign of Edith's list
-    page_text = browser.find_element_by_tag_name('body').text
+    page_text = francis_browser.find_element_by_tag_name('body').text
     assert 'Buy peacock feathers' not in page_text
     assert 'make a fly' not in page_text
 
