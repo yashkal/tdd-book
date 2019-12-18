@@ -10,10 +10,13 @@ MAX_WAIT = 10
 
 
 @pytest.fixture
-def new_browser():
-    browser = webdriver.Firefox()
-    yield browser
-    browser.quit()
+def new_browser(request):
+    def _new_browser():
+        browser = webdriver.Firefox()
+        request.addfinalizer(lambda b=browser: b.quit())
+        return browser
+
+    yield _new_browser
 
 
 def wait_for_row_in_list_table(browser, row_text):
@@ -33,7 +36,7 @@ def wait_for_row_in_list_table(browser, row_text):
 def test_can_start_a_list_and_retrieve_it_later(new_browser, live_server):
     # Edith has heard about a cool new online to-do app. She goes
     # to check out its homepage
-    browser = new_browser
+    browser = new_browser()
     browser.get(live_server.url)
 
     # She notices the page title and header mention to-do lists
@@ -69,20 +72,20 @@ def test_can_start_a_list_and_retrieve_it_later(new_browser, live_server):
 
 def test_multiple_users_can_start_lists_at_different_urls(new_browser, live_server):
     # Edith starts a new to-do list
-    browser = new_browser
-    browser.get(live_server.url)
-    inputbox = browser.find_element_by_id("id_new_item")
+    edith_browser = new_browser()
+    edith_browser.get(live_server.url)
+    inputbox = edith_browser.find_element_by_id("id_new_item")
     inputbox.send_keys("Buy peacock feathers")
     inputbox.send_keys(Keys.ENTER)
-    wait_for_row_in_list_table(browser, "1: Buy peacock feathers")
+    wait_for_row_in_list_table(edith_browser, "1: Buy peacock feathers")
 
     # She notices that her list has a unique URL
-    edith_list_url = browser.current_url
+    edith_list_url = edith_browser.current_url
     assert re.search(r"/lists/.+", edith_list_url)
 
     # Now a new user, Francis, comes along to the site
-    # browser.quit()
-    francis_browser = new_browser
+    edith_browser.quit()
+    francis_browser = new_browser()
 
     # There is no sign of Edith's list
     francis_browser.get(live_server.url)
