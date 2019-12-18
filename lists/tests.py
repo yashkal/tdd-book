@@ -7,7 +7,7 @@ from lists.models import Item
 class TestHomePage:
     def test_uses_home_template(self, client):
         response = client.get("/")
-        assert "home.html" in (t.name for t in response.templates)
+        assert "home.html" in [t.name for t in response.templates]
 
     def test_can_save_a_POST_request(self, client):
         response = client.post("/", data={"item_text": "A new list item"})
@@ -49,6 +49,10 @@ class TestItemModel:
 
 @pytest.mark.django_db
 class TestListView:
+    def test_uses_list_template(self, client):
+        response = client.get("/lists/the-only-list/")
+        assert "list.html" in [t.name for t in response.templates]
+
     def test_displays_all_list_items(self, client):
         Item.objects.create(text="itemey 1")
         Item.objects.create(text="itemey 2")
