@@ -10,10 +10,6 @@ class TestHomePage:
         response = client.get("/")
         SimpleTestCase().assertTemplateUsed(response, "home.html")
 
-    def test_only_saves_items_when_necessary(self, client):
-        client.get("/")
-        assert Item.objects.count() == 0
-
 
 @pytest.mark.django_db
 class TestItemModel:
