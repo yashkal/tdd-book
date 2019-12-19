@@ -1,4 +1,5 @@
 import pytest
+from django.test import SimpleTestCase
 
 from lists.models import Item
 
@@ -7,7 +8,7 @@ from lists.models import Item
 class TestHomePage:
     def test_uses_home_template(self, client):
         response = client.get("/")
-        assert "home.html" in [t.name for t in response.templates]
+        SimpleTestCase().assertTemplateUsed(response, "home.html")
 
     def test_can_save_a_POST_request(self, client):
         response = client.post("/", data={"item_text": "A new list item"})
@@ -19,8 +20,7 @@ class TestHomePage:
     def test_redirects_after_POST(self, client):
         response = client.post("/", data={"item_text": "A new list item"})
 
-        assert response.status_code == 302
-        assert response["location"] == "/lists/the-only-list/"
+        SimpleTestCase().assertRedirects(response, "/lists/the-only-list/")
 
     def test_only_saves_items_when_necessary(self, client):
         client.get("/")
@@ -51,7 +51,7 @@ class TestItemModel:
 class TestListView:
     def test_uses_list_template(self, client):
         response = client.get("/lists/the-only-list/")
-        assert "list.html" in [t.name for t in response.templates]
+        SimpleTestCase().assertTemplateUsed(response, "list.html")
 
     def test_displays_all_list_items(self, client):
         Item.objects.create(text="itemey 1")
