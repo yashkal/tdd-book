@@ -10,18 +10,6 @@ class TestHomePage:
         response = client.get("/")
         SimpleTestCase().assertTemplateUsed(response, "home.html")
 
-    def test_can_save_a_POST_request(self, client):
-        response = client.post("/", data={"item_text": "A new list item"})
-
-        assert Item.objects.count() == 1
-        new_item = Item.objects.first()
-        assert new_item.text == "A new list item"
-
-    def test_redirects_after_POST(self, client):
-        response = client.post("/", data={"item_text": "A new list item"})
-
-        SimpleTestCase().assertRedirects(response, "/lists/the-only-list/")
-
     def test_only_saves_items_when_necessary(self, client):
         client.get("/")
         assert Item.objects.count() == 0
@@ -62,3 +50,18 @@ class TestListView:
         assert response.status_code == 200
         assert "itemey 1" in response.content.decode()
         assert "itemey 2" in response.content.decode()
+
+
+@pytest.mark.django_db
+class TestNewList:
+    def test_can_save_a_POST_request(self, client):
+        response = client.post("/lists/new", data={"item_text": "A new list item"})
+
+        assert Item.objects.count() == 1
+        new_item = Item.objects.first()
+        assert new_item.text == "A new list item"
+
+    def test_redirects_after_POST(self, client):
+        response = client.post("/lists/new", data={"item_text": "A new list item"})
+
+        SimpleTestCase().assertRedirects(response, "/lists/the-only-list/")
