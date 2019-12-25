@@ -44,19 +44,24 @@ class TestListAndItemModel:
 @pytest.mark.django_db
 class TestListView:
     def test_uses_list_template(self, client):
-        response = client.get("/lists/the-only-list/")
+        list_ = List.objects.create()
+        response = client.get(f"/lists/{list_.id}/")
         SimpleTestCase().assertTemplateUsed(response, "list.html")
 
-    def test_displays_all_items(self, client):
-        list_ = List.objects.create()
-        Item.objects.create(text="itemey 1", list=list_)
-        Item.objects.create(text="itemey 2", list=list_)
+    def test_displays_only_items_for_that_list(self, client):
+        correct_list = List.objects.create()
+        Item.objects.create(text="itemey 1", list=correct_list)
+        Item.objects.create(text="itemey 2", list=correct_list)
+        other_list = List.objects.create()
+        Item.objects.create(text="other item 1", list=other_list)
+        Item.objects.create(text="other item 2", list=other_list)
 
-        response = client.get("/lists/the-only-list/")
+        response = client.get(f"/lists/{correct_list.id}/")
 
-        assert response.status_code == 200
-        assert "itemey 1" in response.content.decode()
-        assert "itemey 2" in response.content.decode()
+        SimpleTestCase().assertContains(response, "itemey 1")
+        SimpleTestCase().assertContains(response, "itemey 2")
+        SimpleTestCase().assertNotContains(response, "other item 1")
+        SimpleTestCase().assertNotContains(response, "other item 2")
 
 
 @pytest.mark.django_db
@@ -70,5 +75,5 @@ class TestNewList:
 
     def test_redirects_after_POST(self, client):
         response = client.post("/lists/new", data={"item_text": "A new list item"})
-
-        SimpleTestCase().assertRedirects(response, "/lists/the-only-list/")
+        list_ = List.objects.first()
+        SimpleTestCase().assertRedirects(response, f"/lists/{list_.id}/")
