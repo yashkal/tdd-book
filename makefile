@@ -1,4 +1,4 @@
-.PHONY: clean-pyc run
+.PHONY: clean-pyc run format
 
 clean-pyc:
 	fd -I __pycache__ -x rm -rf {}
@@ -6,3 +6,7 @@ clean-pyc:
 
 run:
 	python manage.py runserver
+
+format:
+	black --exclude 'migrations'
+	isort --skip-glob *migrations*
