@@ -110,3 +110,27 @@ def test_multiple_users_can_start_lists_at_different_urls(new_browser, live_serv
     assert "make a fly" not in page_text
 
     # Satisfied, they both go to sleep
+
+
+def test_layout_and_styling(new_browser, live_server):
+    browser = new_browser()
+    browser.get(live_server.url)
+    browser.set_window_size(1024, 768)
+
+    # She notices the input box is nicely centered
+    inputbox = browser.find_element_by_id("id_new_item")
+    assert (
+        pytest.approx(512, abs=10)
+        == inputbox.location["x"] + inputbox.size["width"] / 2
+    )
+
+    # She starts a new list and sees the input is nicely
+    # centered there too
+    inputbox.send_keys("testing")
+    inputbox.send_keys(Keys.ENTER)
+    wait_for_row_in_list_table(browser, "1: testing")
+    inputbox = browser.find_element_by_id("id_new_item")
+    assert (
+        pytest.approx(512, abs=10)
+        == inputbox.location["x"] + inputbox.size["width"] / 2
+    )
