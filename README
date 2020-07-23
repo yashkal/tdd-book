@@ -1,0 +1,11 @@
+# Dev notes
+
+[https://docs.djangoproject.com/en/3.0/howto/deployment/wsgi/gunicorn/]
+https://medium.com/@kmmanoj/deploying-a-scalable-flask-app-using-gunicorn-and-nginx-in-docker-part-1-3344f13c9649
+
+Create docker file and run gunicorn/nginx
+test using a clone repository with a new branch for testing
+
+Requirements for development:
+selenium<4
+pytest-django
