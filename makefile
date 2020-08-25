@@ -1,13 +1,16 @@
 .PHONY: clean-pyc run format
 
-docker-build:
-	docker build --tag superlists .
+dc-build:
+	docker-compose build
 
-docker-run:
-	docker run --rm --name superlists -p 8000:8000 superlists
+dc-rebuild:
+	docker-compose build --no-cache
 
-docker-clean:
-	docker rmi superlists
+dc-up:
+	docker-compose up -d
+
+dc-down:
+	docker-compose down
 
 clean-pyc:
 	fd -I __pycache__ -x rm -rf {}

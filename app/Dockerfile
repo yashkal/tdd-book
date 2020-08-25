@@ -8,14 +8,10 @@ WORKDIR /usr/src/app
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 
-ENV DEBUG 1
-ENV SECRET_KEY foo
-ENV DJANGO_ALLOWED_HOSTS localhost 127.0.0.1 [::1]
-
-RUN pip install --upgrade pip
 COPY ./requirements.txt /usr/src/app
-RUN pip install -r requirements.txt
+RUN pip install --upgrade pip && \
+pip install -r requirements.txt
 
 COPY . /usr/src/app/
 
-CMD python3 manage.py runserver 0.0.0.0:8000
+# ENTRYPOINT ./entrypoint.sh
