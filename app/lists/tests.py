@@ -1,14 +1,13 @@
 import pytest
 from django.test import SimpleTestCase
-
 from lists.models import Item, List
+from pytest_django import asserts as test
 
 
-@pytest.mark.django_db
 class TestHomePage:
     def test_uses_home_template(self, client):
         response = client.get("/")
-        SimpleTestCase().assertTemplateUsed(response, "home.html")
+        test.assertTemplateUsed(response, "home.html")
 
 
 @pytest.mark.django_db
@@ -46,7 +45,7 @@ class TestListView:
     def test_uses_list_template(self, client):
         list_ = List.objects.create()
         response = client.get(f"/lists/{list_.id}/")
-        SimpleTestCase().assertTemplateUsed(response, "list.html")
+        test.assertTemplateUsed(response, "list.html")
 
     def test_displays_only_items_for_that_list(self, client):
         correct_list = List.objects.create()
@@ -58,10 +57,10 @@ class TestListView:
 
         response = client.get(f"/lists/{correct_list.id}/")
 
-        SimpleTestCase().assertContains(response, "itemey 1")
-        SimpleTestCase().assertContains(response, "itemey 2")
-        SimpleTestCase().assertNotContains(response, "other item 1")
-        SimpleTestCase().assertNotContains(response, "other item 2")
+        test.assertContains(response, "itemey 1")
+        test.assertContains(response, "itemey 2")
+        test.assertNotContains(response, "other item 1")
+        test.assertNotContains(response, "other item 2")
 
     def test_passes_correct_list_to_template(self, client):
         other_list = List.objects.create()
@@ -82,7 +81,7 @@ class TestNewList:
     def test_redirects_after_POST(self, client):
         response = client.post("/lists/new", data={"item_text": "A new list item"})
         list_ = List.objects.first()
-        SimpleTestCase().assertRedirects(response, f"/lists/{list_.id}/")
+        test.assertRedirects(response, f"/lists/{list_.id}/")
 
 
 @pytest.mark.django_db
@@ -111,4 +110,4 @@ class TestNewItem:
             {"item_text": "A new item for existing list"},
         )
 
-        SimpleTestCase().assertRedirects(response, f"/lists/{correct_list.id}/")
+        test.assertRedirects(response, f"/lists/{correct_list.id}/")
