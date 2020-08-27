@@ -1,24 +1,25 @@
-.PHONY: clean-pyc run format
-
-dc-build:
+.PHONY: build
+build:
 	docker-compose build
 
-dc-rebuild:
+.PHONY: rebuild
+rebuild:
 	docker-compose build --no-cache
 
-dc-up:
+.PHONY: run
+run:
 	docker-compose up -d
 
-dc-down:
-	docker-compose down
+.PHONY: clean
+clean: 
+	docker-compose down --remove-orphans
 
+.PHONY: clean-pyc
 clean-pyc:
 	fd -I __pycache__ -x rm -rf {}
 	fd -I .pyc -x rm -rf {}
 
-run:
-	python manage.py runserver
-
+.PHONY: format
 format:
 	black --exclude 'migrations'
-	isort --skip-glob *migrations*
+	isort --skip-glob *migrations* app
