@@ -3,10 +3,17 @@ version: "3.8"
 services:
     app:
         build: ./app
-        ports: 
-            - 8000:8000
-        command: python3 manage.py runserver 0.0.0.0:8000
+        expose: 
+            - 8000
+        command: gunicorn superlists.wsgi:application --bind 0.0.0.0:8000
         volumes: 
             - ./app:/usr/src/app
         env_file:
             - ./.env.dev
+
+    nginx:
+        build: ./nginx
+        ports:
+            - 8000:80
+        depends_on:
+            - app
