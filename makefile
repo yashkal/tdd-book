@@ -11,6 +11,9 @@ run:
 	docker-compose up -d
 
 .PHONY: test
+test: export DEBUG=1
+test: export DJANGO_ALLOWED_HOSTS=localhost
+test: export SECRET_KEY=foo
 test:
 	pytest -v app
 
