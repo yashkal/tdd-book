@@ -12,7 +12,11 @@ run:
 
 .PHONY: test
 test:
-	pytest app
+	pytest -v app
+
+.PHONY: logs
+logs:
+	docker-compose logs
 
 .PHONY: clean
 clean: 
