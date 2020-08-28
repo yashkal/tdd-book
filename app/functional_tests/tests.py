@@ -14,6 +14,7 @@ def new_browser(request):
     def _new_browser():
         browser = webdriver.Firefox()
         request.addfinalizer(lambda b=browser: b.quit())
+        browser.get("http://localhost:8000")
         return browser
 
     yield _new_browser
@@ -33,11 +34,11 @@ def wait_for_row_in_list_table(browser, row_text):
             time.sleep(0.5)
 
 
-def test_can_start_a_list_and_retrieve_it_later(new_browser, live_server):
+def test_can_start_a_list_and_retrieve_it_later(new_browser):
     # Edith has heard about a cool new online to-do app. She goes
     # to check out its homepage
     browser = new_browser()
-    browser.get(live_server.url)
+    # browser.get(live_server.url)
 
     # She notices the page title and header mention to-do lists
     assert "To-Do" in browser.title
@@ -70,10 +71,10 @@ def test_can_start_a_list_and_retrieve_it_later(new_browser, live_server):
     # Satisfied, she goes back to sleep
 
 
-def test_multiple_users_can_start_lists_at_different_urls(new_browser, live_server):
+def test_multiple_users_can_start_lists_at_different_urls(new_browser):
     # Edith starts a new to-do list
     edith_browser = new_browser()
-    edith_browser.get(live_server.url)
+    # edith_browser.get(live_server.url)
     inputbox = edith_browser.find_element_by_id("id_new_item")
     inputbox.send_keys("Buy peacock feathers")
     inputbox.send_keys(Keys.ENTER)
@@ -88,7 +89,7 @@ def test_multiple_users_can_start_lists_at_different_urls(new_browser, live_serv
     francis_browser = new_browser()
 
     # There is no sign of Edith's list
-    francis_browser.get(live_server.url)
+    # francis_browser.get(live_server.url)
     page_text = francis_browser.find_element_by_tag_name("body").text
     assert "Buy peacock feathers" not in page_text
     assert "make a fly" not in page_text
@@ -112,9 +113,9 @@ def test_multiple_users_can_start_lists_at_different_urls(new_browser, live_serv
     # Satisfied, they both go to sleep
 
 
-def test_layout_and_styling(new_browser, live_server):
+def test_layout_and_styling(new_browser):
     browser = new_browser()
-    browser.get(live_server.url)
+    # browser.get(live_server.url)
     browser.set_window_size(1024, 768)
 
     # She notices the input box is nicely centered

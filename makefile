@@ -10,6 +10,10 @@ rebuild:
 run:
 	docker-compose up -d
 
+.PHONY: test
+test:
+	pytest app
+
 .PHONY: clean
 clean: 
 	docker-compose down --remove-orphans
