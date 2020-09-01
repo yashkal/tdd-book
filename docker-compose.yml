@@ -8,6 +8,7 @@ services:
         command: gunicorn superlists.wsgi:application --bind 0.0.0.0:8000
         volumes: 
             - ./app:/usr/src/app
+            - static:/usr/src/app/static
         env_file:
             - ./.env.dev
 
@@ -15,5 +16,10 @@ services:
         build: ./nginx
         ports:
             - 8000:80
+        volumes:
+            - static:/home/app/web/static
         depends_on:
             - app
+
+volumes:
+    static:
