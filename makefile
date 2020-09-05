@@ -1,13 +1,17 @@
+.PHONY: help
+help: ## Prints help for targets with comments
+	@cat $(MAKEFILE_LIST) | grep -E '^[a-zA-Z_-]+:.*?## .*$$' | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
+
 .PHONY: build
-build:
+build: ## Build container images
 	docker-compose build
 
 .PHONY: rebuild
-rebuild:
+rebuild: ## Rebuild container images without cache
 	docker-compose build --no-cache
 
 .PHONY: run
-run:
+run: ## Start running containers
 	docker-compose up -d
 
 .PHONY: test utest ftest
@@ -23,19 +27,18 @@ ftest: ## Run functional tests
 	pytest -v app/functional_tests
 
 .PHONY: logs
-logs:
+logs: ## View container log files
 	docker-compose logs
 
-.PHONY: clean
-clean: 
+.PHONY: clean clean-pyc
+clean: ## Stop and remove containers
 	docker-compose down --remove-orphans
 
-.PHONY: clean-pyc
-clean-pyc:
+clean-pyc: ## Remove pycache
 	fd -I __pycache__ -x rm -rf {}
 	fd -I .pyc -x rm -rf {}
 
 .PHONY: format
-format:
-	black --exclude 'migrations'
+format: ## Format python code
+	black --exclude 'migrations' app
 	isort --skip-glob *migrations* app
