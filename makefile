@@ -10,12 +10,17 @@ rebuild:
 run:
 	docker-compose up -d
 
-.PHONY: test
-test: export DEBUG=1
-test: export DJANGO_ALLOWED_HOSTS=localhost
-test: export SECRET_KEY=foo
-test:
-	pytest -v app
+.PHONY: test utest ftest
+test: utest ftest ## Run all tests
+
+utest: export DEBUG=1
+utest: export DJANGO_ALLOWED_HOSTS=localhost
+utest: export SECRET_KEY=foo
+utest: ## Run unit tests
+	pytest -v --override-ini DJANGO_SETTINGS_MODULE=superlists.settings --ignore=app/functional_tests app
+
+ftest: ## Run functional tests
+	pytest -v app/functional_tests
 
 .PHONY: logs
 logs:
