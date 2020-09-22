@@ -1,3 +1,4 @@
+import os
 import re
 import time
 
@@ -14,7 +15,7 @@ def new_browser(request):
     def _new_browser():
         browser = webdriver.Firefox()
         request.addfinalizer(lambda b=browser: b.quit())
-        browser.get("http://localhost:8000")
+        browser.get(os.environ.get("STAGING_ENVIRONMENT"))
         return browser
 
     yield _new_browser

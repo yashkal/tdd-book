@@ -23,6 +23,7 @@ utest: export SECRET_KEY=foo
 utest: ## Run unit tests
 	pytest -v --override-ini DJANGO_SETTINGS_MODULE=superlists.settings --ignore=app/functional_tests app
 
+ftest: export STAGING_ENVIRONMENT?=http://localhost:8000
 ftest: ## Run functional tests
 	pytest -v app/functional_tests
 
