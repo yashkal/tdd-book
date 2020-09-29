@@ -15,16 +15,16 @@ run: ## Start running containers
 	docker-compose up -d
 
 .PHONY: test utest ftest
-test: utest ftest ## Run all tests
+test: utest ftest ## Run unit and function tests (`utest` and `ftest` targets)
 
 utest: export DEBUG=1
 utest: export DJANGO_ALLOWED_HOSTS=localhost
 utest: export SECRET_KEY=foo
-utest: ## Run unit tests
+utest: 
 	pytest -v --override-ini DJANGO_SETTINGS_MODULE=superlists.settings --ignore=app/functional_tests app
 
 ftest: export STAGING_ENVIRONMENT?=http://localhost:8000
-ftest: ## Run functional tests
+ftest:
 	pytest -v app/functional_tests
 
 .PHONY: logs
