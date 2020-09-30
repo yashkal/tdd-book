@@ -45,5 +45,5 @@ environment will not clean itself if there are any errors in testing. If this
 happens, the containers will still be running for debugging.
 
 ```
-make rebuild run test clean
+make build run test clean
 ```

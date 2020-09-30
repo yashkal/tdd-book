@@ -3,11 +3,7 @@ help: ## Prints help for targets with comments
 	@cat $(MAKEFILE_LIST) | grep -E '^[a-zA-Z_-]+:.*?## .*$$' | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
 
 .PHONY: build
-build: ## Build container images
-	docker-compose build
-
-.PHONY: rebuild
-rebuild: ## Rebuild container images without cache
+build: ## Build/rebuild container images
 	docker-compose build --no-cache
 
 .PHONY: run
@@ -20,7 +16,7 @@ test: utest ftest ## Run unit and function tests (`utest` and `ftest` targets)
 utest: export DEBUG=1
 utest: export DJANGO_ALLOWED_HOSTS=localhost
 utest: export SECRET_KEY=foo
-utest: 
+utest:
 	pytest -v --override-ini DJANGO_SETTINGS_MODULE=superlists.settings --ignore=app/functional_tests app
 
 ftest: export STAGING_ENVIRONMENT?=http://localhost:8000
