@@ -7,7 +7,7 @@ These changes are for practicing tools and techniques that I think will make me
 more productive in building services in the long run.
 
 - `makefile` to organize code and reduce unneccesary typing
-- `pytest` instead of Django test client
+- `pytest` for shorter, easier to read/write tests with better test output
 - `docker` for provisioning and deployment (see `deployment_notes.md`)
 
 ## Getting Started (DEV)

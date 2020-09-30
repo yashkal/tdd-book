@@ -16,20 +16,20 @@ docker-machine create --help	# Create a new machine
 docker-machine use <name>	# Set up environment to directly use machine
 ```
 
-Production docker-compose file
+To start up production services, run the following:
 
 ```
 docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d
 ```
 
-For testing, set $STAGING_ENVIRONMENT to find app
+For testing, set `$STAGING_ENVIRONMENT` to find app:
 
 ```
 export STAGING_ENVIRONMENT=http://$(docker-machine ip <name>)
-make test
+make ftest
 ```
 
-When you are finish, you can perform the following cleanup steps
+When you are finished, you can perform the following cleanup steps
 
 ```
 make clean
