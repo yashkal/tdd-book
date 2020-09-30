@@ -2,3 +2,6 @@
 pytest
 pytest-django
 selenium<4
+flake8
+isort
+black
