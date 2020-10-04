@@ -1,5 +1,4 @@
 import pytest
-from django.test import SimpleTestCase
 from lists.models import Item, List
 from pytest_django import asserts as test
 

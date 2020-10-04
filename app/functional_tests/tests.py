@@ -39,7 +39,6 @@ def test_can_start_a_list_and_retrieve_it_later(new_browser):
     # Edith has heard about a cool new online to-do app. She goes
     # to check out its homepage
     browser = new_browser()
-    # browser.get(live_server.url)
 
     # She notices the page title and header mention to-do lists
     assert "To-Do" in browser.title
@@ -75,7 +74,6 @@ def test_can_start_a_list_and_retrieve_it_later(new_browser):
 def test_multiple_users_can_start_lists_at_different_urls(new_browser):
     # Edith starts a new to-do list
     edith_browser = new_browser()
-    # edith_browser.get(live_server.url)
     inputbox = edith_browser.find_element_by_id("id_new_item")
     inputbox.send_keys("Buy peacock feathers")
     inputbox.send_keys(Keys.ENTER)
@@ -90,7 +88,6 @@ def test_multiple_users_can_start_lists_at_different_urls(new_browser):
     francis_browser = new_browser()
 
     # There is no sign of Edith's list
-    # francis_browser.get(live_server.url)
     page_text = francis_browser.find_element_by_tag_name("body").text
     assert "Buy peacock feathers" not in page_text
     assert "make a fly" not in page_text
@@ -116,7 +113,6 @@ def test_multiple_users_can_start_lists_at_different_urls(new_browser):
 
 def test_layout_and_styling(new_browser):
     browser = new_browser()
-    # browser.get(live_server.url)
     browser.set_window_size(1024, 768)
 
     # She notices the input box is nicely centered
@@ -136,3 +132,22 @@ def test_layout_and_styling(new_browser):
         pytest.approx(512, abs=10)
         == inputbox.location["x"] + inputbox.size["width"] / 2
     )
+
+
+@pytest.mark.skip()
+def test_cannot_add_empty_list_items():
+    # Edith goes to the home page and accidently tries to submit and empty list
+    # item. She hits enter on the empty input box
+
+    # The home page refreshes, and there is an error message saying that list
+    # items cannot be blank
+
+    # She tries again, adding text this time for it to work
+
+    # Just to try again, she submits a second blank list item
+
+    # She gets another warning on the list page
+
+    # She corrects it again by filling some text in
+
+    pytest.fail("Finish this test!")
