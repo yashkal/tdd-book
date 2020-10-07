@@ -32,8 +32,9 @@ clean: ## Stop and remove containers
 	docker-compose down --remove-orphans
 
 clean-pyc: ## Remove pycache
-	fd -I __pycache__ -x rm -rf {}
-	fd -I .pyc -x rm -rf {}
+	fd -I __pycache__ app -x rm -rvf {}
+	fd -I .pyc app -x rm -rvf {}
+	fd --hidden .pytest_cache app -x rm -rvf
 
 .PHONY: format
 format: ## Format python code
