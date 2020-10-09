@@ -64,6 +64,14 @@ class ListViewTest:
 
         test.assertRedirects(response, f"/lists/{correct_list.id}/")
 
+    def test_validation_errors_end_up_on_lists_page(self, client):
+        list_ = List.objects.create()
+        response = client.post(f"/lists/{list_.id}/", data={"item_text": ""})
+        assert response.status_code == 200
+        test.assertTemplateUsed(response, "list.html")
+        expected_error = escape("You can't have an empty list item")
+        test.assertContains(response, expected_error)
+
 
 @pytest.mark.django_db
 class NewListTest:
