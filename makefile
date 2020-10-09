@@ -1,3 +1,5 @@
+export SECRET_KEY = django_testing # Must be set for pytest-django to run
+
 .PHONY: help
 help: ## Prints help for targets with comments
 	@cat $(MAKEFILE_LIST) | grep -E '^[a-zA-Z_-]+:.*?## .*$$' | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
@@ -11,16 +13,14 @@ run: ## Start running containers
 	docker-compose up -d
 
 .PHONY: test utest ftest
-test: utest ftest ## Run unit and function tests (`utest` and `ftest` targets)
+test: ## Run unit and function tests (`utest` and `ftest` targets)
+	pytest app
 
-utest: export DEBUG=1
-utest: export DJANGO_ALLOWED_HOSTS=localhost
-utest: export SECRET_KEY=foo
 utest:
-	pytest -v --override-ini DJANGO_SETTINGS_MODULE=superlists.settings --ignore=app/functional_tests app
+	pytest --ignore=app/functional_tests app
 
 ftest:
-	pytest -v app/functional_tests
+	pytest app/functional_tests
 
 .PHONY: logs
 logs: ## View container log files
