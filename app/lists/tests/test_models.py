@@ -4,7 +4,7 @@ from lists.models import Item, List
 
 
 @pytest.mark.django_db
-class TestListAndItemModel:
+class ListAndItemModelTest:
     def test_saving_and_retrieving_items(self):
         list_ = List()
         list_.save()

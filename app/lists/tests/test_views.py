@@ -4,14 +4,14 @@ from lists.models import Item, List
 from pytest_django import asserts as test
 
 
-class TestHomePage:
+class HomePageTest:
     def test_uses_home_template(self, client):
         response = client.get("/")
         test.assertTemplateUsed(response, "home.html")
 
 
 @pytest.mark.django_db
-class TestListView:
+class ListViewTest:
     def test_uses_list_template(self, client):
         list_ = List.objects.create()
         response = client.get(f"/lists/{list_.id}/")
@@ -66,7 +66,7 @@ class TestListView:
 
 
 @pytest.mark.django_db
-class TestNewList:
+class NewListTest:
     def test_can_save_a_POST_request(self, client):
         response = client.post("/lists/new", data={"item_text": "A new list item"})
 
