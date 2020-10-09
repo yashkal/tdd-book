@@ -1,4 +1,5 @@
 import pytest
+from django.utils.html import escape
 from lists.models import Item, List
 from pytest_django import asserts as test
 
@@ -51,6 +52,18 @@ class TestNewList:
         response = client.post("/lists/new", data={"item_text": "A new list item"})
         list_ = List.objects.first()
         test.assertRedirects(response, f"/lists/{list_.id}/")
+
+    def test_validation_errors_are_sent_to_homepage_template(self, client):
+        response = client.post("/lists/new", data={"item_text": ""})
+        assert response.status_code == 200
+        test.assertTemplateUsed(response, "home.html")
+        expected_error = escape("You can't have an empty list item")
+        test.assertContains(response, expected_error)
+
+    def test_invalid_list_items_arent_saved(self, client):
+        client.post("/lists/new", data={"item_text": ""})
+        assert List.objects.count() == 0
+        assert Item.objects.count() == 0
 
 
 @pytest.mark.django_db
