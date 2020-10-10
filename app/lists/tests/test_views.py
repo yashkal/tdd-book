@@ -1,5 +1,6 @@
 import pytest
 from django.utils.html import escape
+from lists.forms import ItemForm
 from lists.models import Item, List
 from pytest_django import asserts as test
 
@@ -8,6 +9,10 @@ class HomePageTest:
     def test_uses_home_template(self, client):
         response = client.get("/")
         test.assertTemplateUsed(response, "home.html")
+
+    def test_home_page_uses_item_form(self, client):
+        response = client.get("/")
+        assert isinstance(response.context["form"], ItemForm)
 
 
 @pytest.mark.django_db
