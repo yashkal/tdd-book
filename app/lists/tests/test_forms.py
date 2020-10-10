@@ -1,4 +1,6 @@
+import pytest
 from lists.forms import EMPTY_ITEM_ERROR, ItemForm
+from lists.models import Item, List
 
 
 def test_form_renders_item_text_input():
@@ -11,3 +13,13 @@ def test_form_validation_for_blank_items():
     form = ItemForm(data={"text": ""})
     assert form.is_valid() is False
     assert form.errors["text"] == [EMPTY_ITEM_ERROR]
+
+
+@pytest.mark.django_db
+def test_form_save_handles_saving_to_a_list():
+    list_ = List.objects.create()
+    form = ItemForm(data={"text": "do me"})
+    new_item = form.save(for_list=list_)
+    assert new_item == Item.objects.first()
+    assert new_item.text == "do me"
+    assert new_item.list == list_
