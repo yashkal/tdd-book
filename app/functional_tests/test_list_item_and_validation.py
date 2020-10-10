@@ -11,9 +11,9 @@ def test_cannot_add_empty_list_items(new_browser):
 
     # The home page refreshes, and there is an error message saying that list
     # items cannot be blank
-    wait_for(
-        lambda: browser.find_element_by_css_selector(".has-error").text,
-        "You can't have an empty list item",
+    assert (
+        wait_for(lambda: browser.find_element_by_css_selector(".has-error").text)
+        == "You can't have an empty list item"
     )
 
     # She tries again, adding text this time for it to work
@@ -25,9 +25,9 @@ def test_cannot_add_empty_list_items(new_browser):
     get_item_input_box(browser).send_keys(Keys.ENTER)
 
     # She gets another warning on the list page
-    wait_for(
-        lambda: browser.find_element_by_css_selector(".has-error").text,
-        "You can't have an empty list item",
+    assert (
+        wait_for(lambda: browser.find_element_by_css_selector(".has-error").text)
+        == "You can't have an empty list item"
     )
 
     # She corrects it again by filling some text in

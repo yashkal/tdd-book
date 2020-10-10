@@ -9,12 +9,11 @@ def get_item_input_box(browser):
     return browser.find_element_by_id("id_text")
 
 
-def wait_for(fn, row_text):
+def wait_for(fn):
     start_time = time.time()
     while True:
         try:
-            assert fn() == row_text
-            return
+            return fn()
         except (AssertionError, WebDriverException) as e:
             if time.time() - start_time > MAX_WAIT:
                 raise e
