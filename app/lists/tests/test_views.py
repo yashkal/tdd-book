@@ -49,7 +49,7 @@ class ListViewTest:
 
         client.post(
             f"/lists/{correct_list.id}/",
-            {"item_text": "A new item for existing list"},
+            {"text": "A new item for existing list"},
         )
 
         assert Item.objects.count() == 1
@@ -64,14 +64,14 @@ class ListViewTest:
 
         response = client.post(
             f"/lists/{correct_list.id}/",
-            {"item_text": "A new item for existing list"},
+            {"text": "A new item for existing list"},
         )
 
         test.assertRedirects(response, f"/lists/{correct_list.id}/")
 
     def test_validation_errors_end_up_on_lists_page(self, client):
         list_ = List.objects.create()
-        response = client.post(f"/lists/{list_.id}/", data={"item_text": ""})
+        response = client.post(f"/lists/{list_.id}/", data={"text": ""})
         assert response.status_code == 200
         test.assertTemplateUsed(response, "list.html")
         expected_error = escape("You can't have an empty list item")
@@ -81,25 +81,25 @@ class ListViewTest:
 @pytest.mark.django_db
 class NewListTest:
     def test_can_save_a_POST_request(self, client):
-        response = client.post("/lists/new", data={"item_text": "A new list item"})
+        response = client.post("/lists/new", data={"text": "A new list item"})
 
         assert Item.objects.count() == 1
         new_item = Item.objects.first()
         assert new_item.text == "A new list item"
 
     def test_redirects_after_POST(self, client):
-        response = client.post("/lists/new", data={"item_text": "A new list item"})
+        response = client.post("/lists/new", data={"text": "A new list item"})
         list_ = List.objects.first()
         test.assertRedirects(response, f"/lists/{list_.id}/")
 
     def test_validation_errors_are_sent_to_homepage_template(self, client):
-        response = client.post("/lists/new", data={"item_text": ""})
+        response = client.post("/lists/new", data={"text": ""})
         assert response.status_code == 200
         test.assertTemplateUsed(response, "home.html")
         expected_error = escape("You can't have an empty list item")
         test.assertContains(response, expected_error)
 
     def test_invalid_list_items_arent_saved(self, client):
-        client.post("/lists/new", data={"item_text": ""})
+        client.post("/lists/new", data={"text": ""})
         assert List.objects.count() == 0
         assert Item.objects.count() == 0

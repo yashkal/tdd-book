@@ -5,6 +5,10 @@ from selenium.common.exceptions import WebDriverException
 MAX_WAIT = 10
 
 
+def get_item_input_box(browser):
+    return browser.find_element_by_id("id_text")
+
+
 def wait_for(fn, row_text):
     start_time = time.time()
     while True:

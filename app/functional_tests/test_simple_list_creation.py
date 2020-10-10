@@ -2,7 +2,7 @@ import re
 
 from selenium.webdriver.common.keys import Keys
 
-from helpers import wait_for_row_in_list_table
+from helpers import get_item_input_box, wait_for_row_in_list_table
 
 
 def test_can_start_a_list_for_one_user(new_browser):
@@ -16,7 +16,7 @@ def test_can_start_a_list_for_one_user(new_browser):
     assert "To-Do" in header_text
 
     # She is invited to enter a to-do item straight away
-    input_box = browser.find_element_by_id("id_new_item")
+    input_box = get_item_input_box(browser)
     assert input_box.get_attribute("placeholder") == "Enter a to-do item"
 
     # She types "Buy peacock feathers" into a text box (Edith's hobby
@@ -30,7 +30,7 @@ def test_can_start_a_list_for_one_user(new_browser):
 
     # There is still a text box inviting her to add another item. She
     # enters "Use peacock feathers to make a fly" (Edith is very methodical)
-    input_box = browser.find_element_by_id("id_new_item")
+    input_box = get_item_input_box(browser)
     input_box.send_keys("Use peacock feathers to make a fly")
     input_box.send_keys(Keys.ENTER)
 
@@ -44,7 +44,7 @@ def test_can_start_a_list_for_one_user(new_browser):
 def test_multiple_users_can_start_lists_at_different_urls(new_browser):
     # Edith starts a new to-do list
     edith_browser = new_browser()
-    inputbox = edith_browser.find_element_by_id("id_new_item")
+    inputbox = get_item_input_box(edith_browser)
     inputbox.send_keys("Buy peacock feathers")
     inputbox.send_keys(Keys.ENTER)
     wait_for_row_in_list_table(edith_browser, "1: Buy peacock feathers")
@@ -63,7 +63,7 @@ def test_multiple_users_can_start_lists_at_different_urls(new_browser):
     assert "make a fly" not in page_text
 
     # Francis starts a new list
-    inputbox = francis_browser.find_element_by_id("id_new_item")
+    inputbox = get_item_input_box(francis_browser)
     inputbox.send_keys("Buy milk")
     inputbox.send_keys(Keys.ENTER)
     wait_for_row_in_list_table(francis_browser, "1: Buy milk")
