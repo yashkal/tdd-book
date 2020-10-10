@@ -9,23 +9,27 @@ def test_cannot_add_empty_list_items(new_browser):
     browser = new_browser()
     get_item_input_box(browser).send_keys(Keys.ENTER)
 
-    # The home page refreshes, and there is an error message saying that list
-    # items cannot be blank
+    # Browser intercepts the request, and does not load the list page
     wait_for(lambda: browser.find_element_by_css_selector("#id_text:invalid"))
 
-    # She tries again, adding text this time for it to work
+    # She starts writing text for the new item and the error disappears
     get_item_input_box(browser).send_keys("Buy milk")
+    wait_for(lambda: browser.find_element_by_css_selector("#id_text:valid"))
+
+    # And she can submit successfully
     get_item_input_box(browser).send_keys(Keys.ENTER)
     wait_for_row_in_list_table(browser, "1: Buy milk")
 
-    # Just to try again, she submits a second blank list item
+    # Perversely, she submits a second blank list item
     get_item_input_box(browser).send_keys(Keys.ENTER)
 
-    # She gets another warning on the list page
+    # Again, the browser will not comply
+    wait_for_row_in_list_table(browser, "1: Buy milk")
     wait_for(lambda: browser.find_element_by_css_selector("#id_text:invalid"))
 
-    # She corrects it again by filling some text in
+    # She can correct it by filling some text in
     get_item_input_box(browser).send_keys("Make tea")
+    wait_for(lambda: browser.find_element_by_css_selector("#id_text:valid"))
     get_item_input_box(browser).send_keys(Keys.ENTER)
     wait_for_row_in_list_table(browser, "1: Buy milk")
     wait_for_row_in_list_table(browser, "2: Make tea")
