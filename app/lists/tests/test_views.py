@@ -96,6 +96,17 @@ class ListViewTest:
         response = post_invalid_input
         test.assertContains(response, escape(EMPTY_ITEM_ERROR))
 
+    @pytest.mark.skip()
+    def test_duplicate_item_validation_errors_show_up_on_lists_page(self, client):
+        list1 = List.objects.create()
+        item1 = Item.objects.create(list=list1, text="textey")
+        response = client.post(f"/lists/{list1.id}/", data={"text": "textey"})
+
+        expected_error = escape("You've already got this in your list")
+        test.assertContains(response, expected_error)
+        test.assertTemplateUsed(response, "list.html")
+        assert Item.objects.all().count() == 1
+
 
 @pytest.mark.django_db
 class NewListTest:
