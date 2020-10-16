@@ -48,3 +48,9 @@ class ExistingListItemFormTest:
         form = ExistingListItemForm(for_list=list_, data={"text": "no twins!"})
         assert form.is_valid() is False
         assert form.errors["text"] == [DUPLICATE_ITEM_ERROR]
+
+    def test_form_save(self):
+        list_ = List.objects.create()
+        form = ExistingListItemForm(for_list=list_, data={"text": "hi"})
+        new_item = form.save()
+        assert new_item == Item.objects.all()[0]

@@ -1,6 +1,6 @@
 import pytest
 from django.utils.html import escape
-from lists.forms import EMPTY_ITEM_ERROR, ItemForm
+from lists.forms import EMPTY_ITEM_ERROR, ExistingListItemForm, ItemForm
 from lists.models import Item, List
 from pytest_django import asserts as test
 
@@ -72,7 +72,7 @@ class ListViewTest:
     def test_displays_item_form(self, client):
         list_ = List.objects.create()
         response = client.get(f"/lists/{list_.id}/")
-        assert isinstance(response.context["form"], ItemForm)
+        assert isinstance(response.context["form"], ExistingListItemForm)
         test.assertContains(response, 'name="text"')
 
     @pytest.fixture()
@@ -90,13 +90,12 @@ class ListViewTest:
 
     def test_invalid_input_passes_form_to_template(self, post_invalid_input):
         response = post_invalid_input
-        assert isinstance(response.context["form"], ItemForm)
+        assert isinstance(response.context["form"], ExistingListItemForm)
 
     def test_invalid_input_shows_error_on_page(self, post_invalid_input):
         response = post_invalid_input
         test.assertContains(response, escape(EMPTY_ITEM_ERROR))
 
-    @pytest.mark.skip()
     def test_duplicate_item_validation_errors_show_up_on_lists_page(self, client):
         list1 = List.objects.create()
         item1 = Item.objects.create(list=list1, text="textey")
